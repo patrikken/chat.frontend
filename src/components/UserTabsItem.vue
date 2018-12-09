@@ -1,15 +1,14 @@
 <template>
   <v-list-tile avatar @click="clickUser" class="list-item" :class="{'active' : active}">
     <v-list-tile-avatar>
-      <img :src="user.avatar">
+      <img src="./../assets/man.png">
     </v-list-tile-avatar>
 
     <v-list-tile-content>
       <v-list-tile-title
         class="title-item"
         :class="{'unreadedmsg' : !message.isReaded}"
-        v-html="fullName"
-      ></v-list-tile-title>
+      >{{fullName}}</v-list-tile-title>
       <v-list-tile-sub-title
         class="statut-item"
         :class="{'unreadedmsg' : !message.isReaded}"
@@ -17,7 +16,7 @@
       ></v-list-tile-sub-title>
     </v-list-tile-content>
 
-    <v-list-tile-action style="padding-top: 15px; padding-bottom: 19px;">
+    <v-list-tile-action style="padding-top: 15px; padding-bottom: 19px;" wrap>
       <span class="time">12:24</span>
       <span class="badge_badge">8</span>
     </v-list-tile-action>
@@ -32,8 +31,19 @@ import Message from "./../models/Message";
 @Component
 export default class UserTabsItem extends Vue {
   @Prop() private user!: User;
-  @Prop() private message!: Message;
+  // @Prop()
+  private message!: any;
   @Prop() private active!: boolean;
+  constructor() {
+    super();
+    this.message = {
+      id: 13,
+      sender: 12,
+      content: "Hello patrik",
+      creationDate: "string",
+      isReaded: true
+    };
+  }
   get fullName() {
     return this.user.first_name + " " + this.user.last_name;
   }
@@ -43,6 +53,10 @@ export default class UserTabsItem extends Vue {
   get content() {
     if (this.message.sender == 13) return "Me: " + this.message.content;
     return this.message.content;
+  }
+  get getAvatar() {
+    if (this.user.avatar) return this.user.avatar;
+    return "./../assets/man.png";
   }
 }
 </script>

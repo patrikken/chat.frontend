@@ -1,7 +1,7 @@
 <template>
-  <v-list-tile avatar @click="alert('click')" class="list-item">
+  <v-list-tile avatar @click="clickOnUser()" class="list-item">
     <v-list-tile-avatar>
-      <img :src="user.avatar">
+      <img src="./../assets/man.png">
     </v-list-tile-avatar>
 
     <v-list-tile-content>
@@ -21,6 +21,15 @@ export default class UserItem extends Vue {
   get fullName() {
     return this.user.first_name + ' ' + this.user.last_name;
   }
+  get getAvatar(){
+    if (this.user.avatar)
+    return this.user.avatar;
+    return './../assets/man.png';
+  }
+  clickOnUser(){
+    this.$emit('NotifactiveUser', this.user);                             
+    this.$router.push({name:'ChatBox',params:{user:""+this.user.id}}); 
+  } 
 }
 </script>
 

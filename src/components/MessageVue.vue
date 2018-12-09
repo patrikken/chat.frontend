@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-layout v-if="!isSender" align-center justify-center row>
+    <v-layout v-if="!isSender" align-center justify-center row> 
       <v-layout align-center justify-center row>
         <v-flex lg1>
           <v-list-tile-avatar>
-            <img :src="activeUser.avatar">
+            <img :src="activeUser.getAvatar">
           </v-list-tile-avatar>
         </v-flex>
         <v-flex lg11>
@@ -18,7 +18,7 @@
       </v-flex>
       <v-flex lg1>
         <v-list-tile-avatar>
-          <img :src="activeUser.avatar">
+          <img :src="activeUser.getAvatar">
         </v-list-tile-avatar>
       </v-flex>
     </v-layout>
@@ -35,11 +35,12 @@ export default class MessageVue extends Vue {
   @Prop() private activeUser!: User;
   @Prop() private message!: Message;
   @Prop() private active!: boolean;
+  @Prop() private localUserId !: number;
   get fullName() {
     return this.activeUser.first_name + " " + this.activeUser.last_name;
   }
   get isSender() {
-    return this.message.sender == 13; // Need to change by current user
+    return this.message.sender == this.localUserId; // Need to change by current user
   }
 }
 </script>

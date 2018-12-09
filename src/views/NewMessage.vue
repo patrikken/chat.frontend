@@ -1,5 +1,5 @@
 <template> 
-  <NewMessageBox/> 
+  <NewMessageBox id="New"/> 
 </template>
 
 <script lang="ts">
@@ -21,6 +21,7 @@ export default class NewMessage extends Vue {
   opacity: 70%; 
   padding: 1em;
   min-height: 400px;
+  padding-bottom: 20px;
 } 
 #app {
   height: 100%;

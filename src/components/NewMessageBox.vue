@@ -29,10 +29,10 @@
             style="padding-left : 25px;padding-right : 25px; padding-bottom : 10px;"
             row
           >
-            <v-flex style="padding-top : 0;"> 
-              <div class="text-xs-center" v-if="loading">
-                <v-progress-circular :size="25" :width="2" color="red" indeterminate></v-progress-circular>
-              </div>
+            <v-flex style="padding-top : 0; min-height : 200px;">
+              <v-layout v-if="loading" fill-height align-center justify-center row>
+                <v-progress-circular :size="25" :width="2" color="#3b87f5" indeterminate></v-progress-circular>
+              </v-layout>
               <div v-else>
                 <v-list two-line class="no-padding">
                   <template v-for="(item, index) in users">
@@ -61,42 +61,21 @@ import axios from "axios";
 })
 export default class NewMessageBox extends Vue {
   @Prop() private msg!: string;
-   loading = true;
-   users = [
-    {
-      avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-      first_name: "Kenfack",
-      last_name: "Patrik",
-      status: "Be Focus"
-    },
-    {
-      avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-      first_name: "Stafack",
-      last_name: "Paul Etienne",
-      status: "Wish I could come, but I'm out of town this weekend."
-    },
-    {
-      avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
-      first_name: "Ken",
-      last_name: "Pat",
-      status: "Do you have Paris recommendations? Have you ever been?"
-    }
-  ];
-  mounted() { 
+  loading = true;
+  users = [];
+  mounted() {
     axios
       .get(Routes.USER_LIST)
       .then(response => {
         // this.items = response.data.bpi;
         console.log(response);
+        this.users = response.data;
       })
       .catch(error => {
         console.log(error);
         // this.errored = true;
       })
-      .finally(() => (
-        this.loading = false
-        )
-        );
+      .finally(() => (this.loading = false));
   }
   // data() {
   //   return {
@@ -104,7 +83,7 @@ export default class NewMessageBox extends Vue {
   //     errored: false,
   //     items: this.users
   //   };
-//  }
+  //  }
 }
 </script>
 

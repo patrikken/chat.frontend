@@ -9,12 +9,12 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/home',
+      path: '/home/',
       name: 'home',
       component: Home
     },
     {
-      path: '/about',
+      path: '/about/',
       name: 'about',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -22,12 +22,12 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     },
     {
-      path : '/new',
+      path : '/',
       name : '/new-message',
       component : NewMessage,
     },
     {
-      path : '/',
+      path : '/chat',
       name : 'ChatBox',
       component : ChatBox,
     }
