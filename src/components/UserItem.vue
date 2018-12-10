@@ -26,9 +26,8 @@ export default class UserItem extends Vue {
     return this.user.avatar;
     return './../assets/man.png';
   }
-  clickOnUser(){
-    this.$emit('NotifactiveUser', this.user);                             
-    this.$router.push({name:'ChatBox',params:{user:""+this.user.id}}); 
+  clickOnUser(){                           
+    this.$router.push({name:'ChatBox',params:{id:""+this.user.id,'last_name':this.user.last_name, 'first_name':this.user.first_name}}); 
   } 
 }
 </script>

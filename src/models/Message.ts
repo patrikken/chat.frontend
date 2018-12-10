@@ -21,7 +21,7 @@ class Message implements MessageInterface {
       user_sender_id : this.sender,
       user_reciever_id : receiver_id,
       body : this.content,
-      type : this.messageType
+      type : this.messageType,
     }
   }
 }

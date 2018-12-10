@@ -31,18 +31,18 @@ import Message from "./../models/Message";
 @Component
 export default class UserTabsItem extends Vue {
   @Prop() private user!: User;
-  // @Prop()
-  private message!: any;
+  @Prop() private message!: any;
+  
   @Prop() private active!: boolean;
   constructor() {
     super();
-    this.message = {
-      id: 13,
-      sender: 12,
-      content: "Hello patrik",
-      creationDate: "string",
-      isReaded: true
-    };
+    // this.message = {
+    //   id: 13,
+    //   sender: 12,
+    //   content: "Hello patrik",
+    //   creationDate: "string",
+    //   isReaded: true
+    // };
   }
   get fullName() {
     return this.user.first_name + " " + this.user.last_name;
@@ -51,7 +51,7 @@ export default class UserTabsItem extends Vue {
     this.$emit("clickUser", this.user.id);
   }
   get content() {
-    if (this.message.sender == 13) return "Me: " + this.message.content;
+    if (this.message.sender == localStorage.getItem('user_id')) return "Me: " + this.message.content;
     return this.message.content;
   }
   get getAvatar() {
@@ -76,7 +76,7 @@ export default class UserTabsItem extends Vue {
   font-size: 12px;
 }
 .unreadedmsg {
-  font-weight: bold;
+  font-weight: 600;
   color: #000000;
 }
 .active {

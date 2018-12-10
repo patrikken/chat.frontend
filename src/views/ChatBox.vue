@@ -11,7 +11,7 @@
       <v-flex fill-height xs12 sm10 md8 lg8>
         <div class="holder">
           <v-layout fill-height row>
-            <v-flex fill-height xs3 sm3 md2 lg3 style="padding-right: 0;">
+            <v-flex fill-height xs3 sm3 md2 lg4 style="padding-right: 0;">
               <v-flex>
                 <v-layout fill-height align-center justify-center row class="header elevation-1">
                   <img src="./../assets/group306.svg" class="header-img">
@@ -21,16 +21,17 @@
               <v-list two-line class="no-padding pk-magin-top-small">
                 <template v-for="(item, index) in data">
                   <UserTabsItem
-                    v-bind:user="item"
-                    v-bind:active="isActive(item.id, index)"
+                    v-bind:user="item.user"
+                    v-bind:active="isActive(item.user.id, index)"
                     v-bind:index="index"
+                    v-bind:message="item.msg[0]"
                     @clickUser="activateUser(index)"
                     :key="index"
                   />
                 </template>
               </v-list>
             </v-flex>
-            <v-flex fill-height xs9 sm9 md10 lg9 style="padding-left: 0;">
+            <v-flex fill-height xs9 sm9 md10 lg8 style="padding-left: 0;">
               <v-flex>
                 <v-layout
                   v-if="activeUser"
@@ -74,8 +75,9 @@
                   justify-center
                   row
                 >
-                  <v-flex lg1>
+                  <v-flex lg2>
                     <v-list-tile-avatar>
+                      {{loggedUser}}
                       <img src="./../assets/man.png">
                     </v-list-tile-avatar>
                   </v-flex>
@@ -118,33 +120,58 @@ import HttpService from "@/services/HTTP";
 })
 export default class ChatBox extends Vue {
   private activeUser: User;
-  //private data: MessageEntry[];
-  private data: User[];
+  private data: MessageEntry[];
+  //private data: User[];
   private msgs: Message[];
   private loading: boolean;
   private localUserId!: number;
   private message: string;
+  private loggedUser: string | null;
   constructor() {
     super();
-    var id = prompt("Enter you ID");
-    if (id != null) this.localUserId = parseInt(id);
-    // this.localUserId = 13;
     this.loading = true;
     this.data = [];
     this.activeUser = new User();
     this.message = "";
+    this.loggedUser = localStorage.getItem("name");
+    var id = localStorage.getItem("user_id");
+    if (id != null) {
+      this.localUserId = parseInt(id);
+    } else {
+      this.$router.push("/");
+    }
     //this.activeUser = this.data[1].user;
     this.msgs = [];
   }
 
-  mounted() {
-    HttpService.GET(Routes.USER_LIST, () => {
+  async mounted() {
+    await HttpService.GET(Routes.USER_CHANELS, () => {
       this.loading = false;
     }).then((value: any) => {
       this.data = value;
       //this.activateUser(1);
     });
-   setInterval(() => {
+    var index = this.data.findIndex(item => {
+      return item.user.id == parseInt(this.$route.params.id);
+    });
+    if (index > -1) {
+      // if user already present in list
+      this.activateUser(index); 
+    } else {
+      // we add the user 
+      var user = new User();
+      user.id = parseInt(this.$route.params.id);
+      user.first_name = this.$route.params.first_name;
+      user.last_name = this.$route.params.last_name; 
+      this.data.unshift({
+        user: user,
+        msg : [{
+          content: ""
+        }]
+      });
+      this.activeUser = user;
+    }
+    setInterval(() => {
       const data = {
         sender: this.localUserId,
         reciever: this.activeUser.id,
@@ -154,9 +181,14 @@ export default class ChatBox extends Vue {
         this.loading = false;
       }).then((value: any) => {
         this.msgs = value.data;
-       // console.log("Result of on service", value.data);
-       this.scrollToBottom();
-      }); 
+        // console.log("Result of on service", value.data);
+        this.scrollToBottom();
+      });
+      HttpService.GET(Routes.USER_CHANELS, () => {
+        this.loading = false;
+      }).then((value: any) => {
+        this.data = value; 
+      });
     }, 1000);
   }
 
@@ -167,7 +199,7 @@ export default class ChatBox extends Vue {
 
   async activateUser(index: number) {
     this.loading = true;
-    this.activeUser = this.data[index];
+    this.activeUser = this.data[index].user;
     const data = {
       sender: this.localUserId,
       reciever: this.activeUser.id,
@@ -183,11 +215,6 @@ export default class ChatBox extends Vue {
   }
 
   isActive(id: number | string, index: number) {
-    if (this.activeUser.id == 0) {
-      if (this.$route.params.user == id) {
-        this.activateUser(index);
-      }
-    }
     return this.activeUser.id == id;
   }
 
@@ -213,7 +240,7 @@ export default class ChatBox extends Vue {
 
 interface MessageEntry {
   user: User;
-  message: any;
+  msg: any;
 }
 </script>
 

@@ -18,7 +18,7 @@
       </v-flex>
       <v-flex lg1>
         <v-list-tile-avatar>
-          <img :src="activeUser.getAvatar">
+          <img src="./../assets/man.png">
         </v-list-tile-avatar>
       </v-flex>
     </v-layout>
