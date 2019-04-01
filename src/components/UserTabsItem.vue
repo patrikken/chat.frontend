@@ -7,18 +7,18 @@
     <v-list-tile-content>
       <v-list-tile-title
         class="title-item"
-        :class="{'unreadedmsg' : !message.isReaded}"
+        :class="{'unreadedmsg' : isReaded}"
       >{{fullName}}</v-list-tile-title>
       <v-list-tile-sub-title
         class="statut-item"
-        :class="{'unreadedmsg' : !message.isReaded}"
+        :class="{'unreadedmsg' : isReaded}"
         v-html="content"
       ></v-list-tile-sub-title>
     </v-list-tile-content>
 
     <v-list-tile-action style="padding-top: 15px; padding-bottom: 19px;" wrap>
-      <span class="time">12:24</span>
-      <span class="badge_badge">8</span>
+      <span class="time">{{date}}</span>
+      <span v-if="isReaded" class="badge_badge"> </span>
     </v-list-tile-action>
   </v-list-tile>
 </template>
@@ -42,12 +42,20 @@ export default class UserTabsItem extends Vue {
     //   content: "Hello patrik",
     //   creationDate: "string",
     //   isReaded: true
-    // };
+    // }; 
   }
   get fullName() {
     return this.user.first_name + " " + this.user.last_name;
   }
+  get isReaded(){
+   return !this.message.isReaded && this.message.sender  != localStorage.getItem('user_id')
+  }
+  get date(){
+    var date = new Date(this.message.creationDate);
+   return date.getHours() +':'+ date.getMinutes();
+  }
   clickUser(key: number) {
+    //this.message.isReaded = true;
     this.$emit("clickUser", this.user.id);
   }
   get content() {

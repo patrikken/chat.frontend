@@ -53,6 +53,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import UserItem from "@/components/UserItem.vue";
 import Routes from "@/services/Routes";
 import axios from "axios";
+import HttpService from "@/services/HTTP";
 
 @Component({
   components: {
@@ -64,18 +65,11 @@ export default class NewMessageBox extends Vue {
   loading = true;
   users = [];
   mounted() {
-    axios
-      .get(Routes.USER_LIST)
-      .then(response => {
-        // this.items = response.data.bpi;
-        console.log(response);
-        this.users = response.data;
-      })
-      .catch(error => {
-        console.log(error);
-        // this.errored = true;
-      })
-      .finally(() => (this.loading = false));
+    HttpService.GET(Routes.USER_LIST, () => {
+      this.loading = false;
+    }).then((response) => { 
+      this.users = response;
+    });
   }
   // data() {
   //   return {

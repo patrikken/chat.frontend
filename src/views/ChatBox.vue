@@ -42,10 +42,9 @@
                   class="header elevation-1"
                 >
                   <v-list-tile-avatar v-if="activeUser.id !=0 ">
-                    <img :src="activeUser.avatar" class="header-avatar">
+                    <img src="./../assets/man.png" class="header-avatar">
                   </v-list-tile-avatar>
                   <span class="pk-title-text">{{activeUser.last_name}} {{activeUser.first_name}}</span>
-                  {{localUserId}}
                 </v-layout>
               </v-flex>
               <div class="pk-chat-panel elevation-1">
@@ -212,6 +211,12 @@ export default class ChatBox extends Vue {
       console.log("Result of on service", value.data);
     });
     this.scrollToBottom();
+    
+    HttpService.POST(Routes.READ_MESSAGES, data, () => {
+      this.loading = false;
+    }).then((value: any) => { 
+     // console.log("MESSAGE READED", value.data);
+    });
   }
 
   isActive(id: number | string, index: number) {
